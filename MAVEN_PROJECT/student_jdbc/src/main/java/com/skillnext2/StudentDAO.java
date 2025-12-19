@@ -1,58 +1,97 @@
 package com.skillnext2;
-import java.sql.*;
+
 import java.util.*;
-public class StudentDAO {
-    private static final String URL = "jdbc:mysql://localhost:3306/skillnext2_db";
-    private static final String USER = "root";
-    private static final String PASSWORD = "root";
-    // Add student
-    public void addStudent(Student student) throws Exception {
-        String sql = "INSERT INTO student (name, sem, department) VALUES (?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, student.getName());
-            stmt.setInt(2, student.getSem());
-            stmt.setString(3, student.getDepartment());
-            stmt.executeUpdate();
-        }
-    }
-    // Fetch all students
-    public List<Student> getAllStudents() throws Exception {
-        List<Student> list = new ArrayList<>();
-        String sql = "SELECT * FROM student";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                Student s = new Student();
-                s.setId(rs.getInt("id"));
-                s.setName(rs.getString("name"));
-                s.setSem(rs.getInt("sem"));
-                s.setDepartment(rs.getString("department"));
-                list.add(s);
+
+public class App {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        StudentDAO dao = new StudentDAO();
+
+        while (true) {
+            System.out.println("\n===== STUDENT MANAGEMENT MENU =====");
+            System.out.println("1. Add Student");
+            System.out.println("2. Display All Students");
+            System.out.println("3. Update Student");
+            System.out.println("4. Delete Student");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = sc.nextInt();
+
+            try {
+                switch (choice) {
+
+                    case 1: // Add
+                        System.out.print("Enter Name: ");
+                        sc.nextLine(); // consume newline
+                        String name = sc.nextLine();
+
+                        System.out.print("Enter Semester: ");
+                        int sem = sc.nextInt();
+
+                        System.out.print("Enter Department: ");
+                        sc.nextLine();
+                        String dept = sc.nextLine();
+
+                        Student s = new Student(name, sem, dept);
+                        dao.addStudent(s);
+                        System.out.println("Student added successfully!");
+                        break;
+
+                    case 2: // Display
+                        List<Student> students = dao.getAllStudents();
+                        if (students.isEmpty()) {
+                            System.out.println("No students found.");
+                        } else {
+                            for (Student st : students) {
+                                System.out.println(st);
+                            }
+                        }
+                        break;
+
+                    case 3: // Update
+                        System.out.print("Enter Student ID to update: ");
+                        int uid = sc.nextInt();
+
+                        System.out.print("Enter New Name: ");
+                        sc.nextLine();
+                        String uname = sc.nextLine();
+
+                        System.out.print("Enter New Semester: ");
+                        int usem = sc.nextInt();
+
+                        System.out.print("Enter New Department: ");
+                        sc.nextLine();
+                        String udept = sc.nextLine();
+
+                        Student us = new Student(uname, usem, udept);
+                        us.setId(uid);
+                        dao.updateStudent(us);
+                        System.out.println("Student updated successfully!");
+                        break;
+
+                    case 4: // Delete
+                        System.out.print("Enter Student ID to delete: ");
+                        int did = sc.nextInt();
+
+                        dao.deleteStudent(did);
+                        System.out.println("Student deleted successfully!");
+                        break;
+
+                    case 5: // Exit
+                        System.out.println("Exiting program. Bye!");
+                        sc.close();
+                        System.exit(0);
+
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }
-        return list;
-    }
-    // Delete student
-    public void deleteStudent(int id) throws Exception {
-        String sql = "DELETE FROM student WHERE id=?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        }
-    }
-    // Update student
-    public void updateStudent(Student student) throws Exception {
-        String sql = "UPDATE student SET name=?, sem=?, department=? WHERE id=?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, student.getName());
-            stmt.setInt(2, student.getSem());
-            stmt.setString(3, student.getDepartment());
-            stmt.setInt(4, student.getId());
-            stmt.executeUpdate();
         }
     }
 }
