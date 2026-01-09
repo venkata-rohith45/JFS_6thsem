@@ -4,16 +4,16 @@
 
 <web-app>
 
-    <display-name>Employee Web Application</display-name>
+    <display-name>Student Web Application</display-name>
 
     <servlet>
-        <servlet-name>EmployeeServlet</servlet-name>
-        <servlet-class>com.skillnext2.EmployeeServlet</servlet-class>
+        <servlet-name>StudentServlet</servlet-name>
+        <servlet-class>com.skillnext2.StudentServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>EmployeeServlet</servlet-name>
-        <url-pattern>/saveEmployee</url-pattern>
+        <servlet-name>StudentServlet</servlet-name>
+        <url-pattern>/saveStudent</url-pattern>
     </servlet-mapping>
 
 </web-app>

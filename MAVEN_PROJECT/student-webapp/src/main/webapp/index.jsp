@@ -1,5 +1,26 @@
+<!DOCTYPE html>
 <html>
+<head>
+    <title>Student Form</title>
+</head>
 <body>
-<h2>Hello World!</h2>
+
+<center>
+    <h2>Student Details</h2>
+
+    <form action="saveStudent" method="post">
+        <!-- ID optional if auto-generated -->
+        ID: <input type="number" name="id"><br><br>
+
+        Name: <input type="text" name="name" required><br><br>
+
+        Semester: <input type="number" name="sem" required><br><br>
+
+        Department: <input type="text" name="department" required><br><br>
+
+        <input type="submit" value="Save Student">
+    </form>
+</center>
+
 </body>
 </html>
